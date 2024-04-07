@@ -94,6 +94,11 @@ class DevicePixelRatio extends VisitDimension
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
-        return false;
+        // In case the value was initially unknown, update it from a subsequent page impression
+        if (is_null($visitor->getVisitorColumn($this->columnName))) {
+            return $this->onNewVisit($request, $visitor, $action);
+        } else {
+            return false;
+        }
     }
 }
